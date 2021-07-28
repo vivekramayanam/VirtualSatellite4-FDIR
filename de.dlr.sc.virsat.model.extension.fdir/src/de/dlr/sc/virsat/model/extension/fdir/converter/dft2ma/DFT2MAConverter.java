@@ -9,10 +9,17 @@
  *******************************************************************************/
 package de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma;
 
+
+import java.util.List;
+
+
+
 import org.eclipse.core.runtime.SubMonitor;
 
 import de.dlr.sc.virsat.fdir.core.markov.MarkovAutomaton;
+import de.dlr.sc.virsat.fdir.core.markov.MarkovState;
 import de.dlr.sc.virsat.fdir.core.markov.algorithm.A2MAConverter;
+import de.dlr.sc.virsat.fdir.core.markov.algorithm.Bisimulation;
 import de.dlr.sc.virsat.fdir.core.metrics.IMetric;
 import de.dlr.sc.virsat.fdir.core.metrics.IQualitativeMetric;
 import de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma.semantics.DFTSemantics;
@@ -83,5 +90,25 @@ public class DFT2MAConverter extends A2MAConverter<DFTState, DFT2MAStateSpaceGen
 	@Override
 	protected DFT2MAStateSpaceGenerator createStateSpaceGenerator() {
 		return new DFT2MAStateSpaceGenerator();
+	}
+	
+	/**
+	 * Reduces the MarkovAutomaton based on Bisimilar states
+	 * @param root a fault tree node used as a root node for the conversion
+	 */
+	public MarkovAutomaton<MarkovState> reduceMA(FaultTreeNode root) {
+		MarkovAutomaton<MarkovState> ma = new MarkovAutomaton<>();
+		MarkovAutomaton<DFTState> dftmarkovautomaton = this.convert(root);
+		List<DFTState> dftStates = dftmarkovautomaton.getStates();
+		for (int i = 0; i < dftStates.size(); i++) {
+			MarkovState markovState = dftStates.get(i);
+			ma.addState(markovState);
+		}
+		
+		Bisimulation bisimulation = new Bisimulation(ma);
+		bisimulation.computeQuotient();
+		
+		return ma;
+		
 	}
 }

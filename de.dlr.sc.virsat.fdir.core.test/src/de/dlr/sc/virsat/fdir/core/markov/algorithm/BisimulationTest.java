@@ -26,7 +26,7 @@ import de.dlr.sc.virsat.fdir.core.markov.MarkovState;
 
 
 /**
- * Test Class for Bisimulation
+ * Test Class for Bisimulation of state type S that extends MarkovState
  * 
  * @author rama_vi
  *

@@ -27,7 +27,8 @@ import de.dlr.sc.virsat.fdir.core.markov.MarkovTransition;
 
 
 /**
- * Class for performing Bisimulation
+ * Class for performing Bisimulation taking a state of 
+ * base type MarkovState 
  * @author rama_vi
  *
  * @param <S>

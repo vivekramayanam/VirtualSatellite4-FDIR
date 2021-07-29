@@ -192,4 +192,17 @@ public class DFT2MAConverterTest extends ATestCase {
 		assertEquals(EXPECTED_COUNT_STATES, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONS, ma.getTransitions().size());
 	}
+	
+	@Test
+	public void testReduceMA() throws IOException {
+		dft2MaConverter.getStateSpaceGenerator().setSemantics(DFTSemantics.createNDDFTSemantics());
+		Fault fault = createDFT("/resources/galileoRepair/csp3SymmetricRepair.dft");
+		MarkovAutomaton<DFTState> dftMarkovAutomaton = dft2MaConverter.reduceMA(fault);
+		
+		
+		
+	}
+	
 }
+
+

@@ -14,11 +14,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.dlr.sc.virsat.fdir.core.markov.MarkovAutomaton;
+import de.dlr.sc.virsat.fdir.core.markov.MarkovState;
 import de.dlr.sc.virsat.fdir.core.metrics.FailLabelProvider;
 import de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma.events.IDFTEvent;
 import de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma.po.PONDDFTSemantics;
@@ -194,10 +196,26 @@ public class DFT2MAConverterTest extends ATestCase {
 	}
 	
 	@Test
-	public void testReduceMA() throws IOException {
+	public void testReduceMA1() throws IOException {
 		dft2MaConverter.getStateSpaceGenerator().setSemantics(DFTSemantics.createNDDFTSemantics());
 		Fault fault = createDFT("/resources/galileoRepair/csp3SymmetricRepair.dft");
 		dft2MaConverter.reduceMA(fault);
+	}
+	
+	@Test
+	public void testReduceMA2() throws IOException {
+		//dft2MaConverter.getStateSpaceGenerator().setSemantics(PONDDFTSemantics.createPONDDFTSemantics());
+		Fault fault = createDFT("/resources/galileoUniform/csp2Repair1Prob1.dft");
+		MarkovAutomaton<DFTState> dftreducedautomaton = dft2MaConverter.reduceMA(fault);
+		
+		List<DFTState> dftStates = dftreducedautomaton.getStates();
+		final int ACTUAL_COUNT_STATES_AFTER_BISIMULATIONS = dftStates.size();
+		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATIONS = 5;
+		List<Object> stateLabels0 = dftreducedautomaton.getSuccEvents(dftStates.get(0));
+		List<Object> stateLabels1 = dftreducedautomaton.getSuccEvents(dftStates.get(1));
+		List<Object> stateLabels2 = dftreducedautomaton.getSuccEvents(dftStates.get(2));
+		List<Object> stateLabels3 = dftreducedautomaton.getSuccEvents(dftStates.get(3));
+		List<Object> stateLabels4 = dftreducedautomaton.getSuccEvents(dftStates.get(4));
 		
 		
 		

@@ -10,20 +10,23 @@
 package de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import de.dlr.sc.virsat.fdir.core.markov.MarkovAutomaton;
-import de.dlr.sc.virsat.fdir.core.markov.MarkovState;
 import de.dlr.sc.virsat.fdir.core.metrics.FailLabelProvider;
 import de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma.events.IDFTEvent;
-import de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma.po.PONDDFTSemantics;
 import de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma.semantics.DFTSemantics;
 import de.dlr.sc.virsat.model.extension.fdir.model.Fault;
 import de.dlr.sc.virsat.model.extension.fdir.model.FaultTreeNode;
@@ -183,41 +186,55 @@ public class DFT2MAConverterTest extends ATestCase {
 	}
 	
 	@Test
-	public void testConvertObsObsRepair1Delayed() throws IOException {
-		FaultTreeNode root = createBasicDFT("/resources/galileoObsRepair/obsObsRepair1Delayed.dft");
-		
-		dft2MaConverter.getStateSpaceGenerator().setSemantics(PONDDFTSemantics.createPONDDFTSemantics());
-		MarkovAutomaton<DFTState> ma = dft2MaConverter.convert(root);
-		
-		final int EXPECTED_COUNT_STATES = 4;
-		final int EXPECTED_COUNT_TRANSITIONS = 5;
-		assertEquals(EXPECTED_COUNT_STATES, ma.getStates().size());
-		assertEquals(EXPECTED_COUNT_TRANSITIONS, ma.getTransitions().size());
-	}
-	
-	@Test
 	public void testReduceMA1() throws IOException {
-		dft2MaConverter.getStateSpaceGenerator().setSemantics(DFTSemantics.createNDDFTSemantics());
-		Fault fault = createDFT("/resources/galileoRepair/csp3SymmetricRepair.dft");
-		dft2MaConverter.reduceMA(fault);
-	}
-	
-	@Test
-	public void testReduceMA2() throws IOException {
-		//dft2MaConverter.getStateSpaceGenerator().setSemantics(PONDDFTSemantics.createPONDDFTSemantics());
 		Fault fault = createDFT("/resources/galileoUniform/csp2Repair1Prob1.dft");
 		MarkovAutomaton<DFTState> dftreducedautomaton = dft2MaConverter.reduceMA(fault);
 		
 		List<DFTState> dftStates = dftreducedautomaton.getStates();
-		final int ACTUAL_COUNT_STATES_AFTER_BISIMULATIONS = dftStates.size();
-		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATIONS = 5;
+		
+		final int ACTUAL_COUNT_STATES_AFTER_BISIMULATION = dftStates.size();
+		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 5;
+		final int ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION = dftreducedautomaton.getTransitions().size();
+		final int EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION = 6;
+		
 		List<Object> stateLabels0 = dftreducedautomaton.getSuccEvents(dftStates.get(0));
 		List<Object> stateLabels1 = dftreducedautomaton.getSuccEvents(dftStates.get(1));
 		List<Object> stateLabels2 = dftreducedautomaton.getSuccEvents(dftStates.get(2));
 		List<Object> stateLabels3 = dftreducedautomaton.getSuccEvents(dftStates.get(3));
 		List<Object> stateLabels4 = dftreducedautomaton.getSuccEvents(dftStates.get(4));
+		List<Object> allStatesLabels = Stream.of(stateLabels0, stateLabels1, stateLabels2, stateLabels3, stateLabels4)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 		
+		assertEquals(EXPECTED_COUNT_STATES_AFTER_BISIMULATION, ACTUAL_COUNT_STATES_AFTER_BISIMULATION);
+		assertEquals(EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION, ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION);
+		List<Object> ExpectedAllStatesLabels = Arrays.asList("F(a)", "F(a)", "F(p)", "Not-F(p)", "R(a)", "R(a)");
+		assertTrue(allStatesLabels.containsAll(ExpectedAllStatesLabels));
+				
+	}
+	
+	@Test
+	public void testReduceMA2() throws IOException {
+		Fault fault = createDFT("/resources/galileoUniform/csp2Prob1Exp1.dft");
+		MarkovAutomaton<DFTState> dftreducedautomaton = dft2MaConverter.reduceMA(fault);
 		
+		List<DFTState> dftStates = dftreducedautomaton.getStates();
+		final int ACTUAL_COUNT_STATES_AFTER_BISIMULATION = dftStates.size();
+		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 3;
+		final int ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION = dftreducedautomaton.getTransitions().size();
+		final int EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION = 3;
+		
+		List<Object> stateLabels0 = dftreducedautomaton.getSuccEvents(dftStates.get(0));
+		List<Object> stateLabels1 = dftreducedautomaton.getSuccEvents(dftStates.get(1));
+		List<Object> stateLabels2 = dftreducedautomaton.getSuccEvents(dftStates.get(2));
+		List<Object> allStatesLabels = Stream.of(stateLabels0, stateLabels1, stateLabels2)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+		
+		assertEquals(EXPECTED_COUNT_STATES_AFTER_BISIMULATION, ACTUAL_COUNT_STATES_AFTER_BISIMULATION);
+		assertEquals(EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION, ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION);
+		List<Object> ExpectedAllStatesLabels = Arrays.asList("F(a)", "F(p)", "Not-F(p)");
+		assertTrue(allStatesLabels.containsAll(ExpectedAllStatesLabels));
 		
 	}
 	

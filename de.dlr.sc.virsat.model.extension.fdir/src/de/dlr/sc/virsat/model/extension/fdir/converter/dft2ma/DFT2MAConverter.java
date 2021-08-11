@@ -94,6 +94,7 @@ public class DFT2MAConverter extends A2MAConverter<DFTState, DFT2MAStateSpaceGen
 	/**
 	 * Reduces the MarkovAutomaton based on compute quotient using Bisimilar states
 	 * @param root a fault tree node used as a root node for the conversion
+	 * return the dftconvertedautomaton is given as output
 	 */
 	public MarkovAutomaton<DFTState> reduceMA(FaultTreeNode root) {
 		

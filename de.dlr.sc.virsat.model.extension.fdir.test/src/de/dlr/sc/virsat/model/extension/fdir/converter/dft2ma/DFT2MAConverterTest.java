@@ -14,11 +14,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.junit.Before;
 import org.junit.Test;
 import de.dlr.sc.virsat.fdir.core.markov.MarkovAutomaton;
@@ -216,12 +213,12 @@ public class DFT2MAConverterTest extends ATestCase {
 		final int ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION = dftreducedautomaton.getTransitions().size();
 		final int EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION = 3;
 
+		List<Object> allStatesLabels = new ArrayList<Object>();
 		List<Object> expectedAllStatesLabels = Arrays.asList("F(a)", "F(p)", "Not-F(p)");
-		List<Object> stateLabels0 = dftreducedautomaton.getSuccEvents(dftStates.get(0));
-		List<Object> stateLabels1 = dftreducedautomaton.getSuccEvents(dftStates.get(1));
-		List<Object> stateLabels2 = dftreducedautomaton.getSuccEvents(dftStates.get(2));
-		List<Object> allStatesLabels = Stream.of(stateLabels0, stateLabels1, stateLabels2).flatMap(Collection::stream)
-				.collect(Collectors.toList());
+		for (int i = 0; i < dftStates.size(); i++) {
+			List<Object> stateLabels = dftreducedautomaton.getSuccEvents(dftStates.get(i));
+			allStatesLabels.addAll(stateLabels);
+		}
 
 		assertEquals(EXPECTED_COUNT_STATES_AFTER_BISIMULATION, ACTUAL_COUNT_STATES_AFTER_BISIMULATION);
 		assertEquals(EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION, ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION);

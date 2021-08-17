@@ -9,11 +9,6 @@
  *******************************************************************************/
 package de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma;
 
-
-
-
-
-
 import org.eclipse.core.runtime.SubMonitor;
 
 import de.dlr.sc.virsat.fdir.core.markov.MarkovAutomaton;
@@ -29,50 +24,57 @@ import de.dlr.sc.virsat.model.extension.fdir.util.FaultTreeHolder;
 
 /**
  * Constructs a markov automaton from a DFT.
+ * 
  * @author muel_s8
  *
  */
 public class DFT2MAConverter extends A2MAConverter<DFTState, DFT2MAStateSpaceGenerator> {
-	
+
 	/**
 	 * Converts a fault tree with the passed node as a root to a Markov automaton.
-	 * @param root a fault tree node used as a root node for the conversion
+	 * 
+	 * @param root                        a fault tree node used as a root node for
+	 *                                    the conversion
 	 * @param failableBasicEventsProvider the nodes that need to fail
-	 * @param failLabelProvider the fail label criterion
-	 * @param monitor the monitor
+	 * @param failLabelProvider           the fail label criterion
+	 * @param monitor                     the monitor
 	 * @return the generated Markov automaton resulting from the conversion
 	 */
-	public MarkovAutomaton<DFTState> convert(FaultTreeNode root, FailableBasicEventsProvider failableBasicEventsProvider, SubMonitor monitor) {
+	public MarkovAutomaton<DFTState> convert(FaultTreeNode root,
+			FailableBasicEventsProvider failableBasicEventsProvider, SubMonitor monitor) {
 		FaultTreeNode holderRoot = root instanceof BasicEvent ? root.getFault() : root;
 		FaultTreeHolder ftHolder = new FaultTreeHolder(holderRoot);
 		stateSpaceGenerator.configure(ftHolder, failableBasicEventsProvider);
 		MarkovAutomaton<DFTState> ma = maBuilder.build(stateSpaceGenerator, monitor);
-		
+		Bisimulation<DFTState> bisimulation = new Bisimulation<>(ma);
+		bisimulation.computeQuotient();
 		return ma;
 	}
-	
+
 	/**
-	 * Converts a fault tree with the passed node as a root to a
-	 * Markov automaton.
+	 * Converts a fault tree with the passed node as a root to a Markov automaton.
+	 * 
 	 * @param root a fault tree node used as a root node for the conversion
 	 * @return the generated Markov automaton resulting from the conversion
 	 */
 	public MarkovAutomaton<DFTState> convert(FaultTreeNode root) {
 		return convert(root, null, null);
 	}
-	
+
 	/**
 	 * Configures the state space generator
-	 * @param metrics the metrics to evaluate
+	 * 
+	 * @param metrics                     the metrics to evaluate
 	 * @param failableBasicEventsProvider the basic events provider
 	 */
 	public void configure(DFTSemantics semantics, IMetric[] metrics) {
 		stateSpaceGenerator.setSemantics(semantics);
 		stateSpaceGenerator.getDftSemantics().setAllowsRepairEvents(!hasQualitativeMetric(metrics));
 	}
-	
+
 	/**
 	 * Checks if there is a qualitative metric
+	 * 
 	 * @param metrics the metrics
 	 * @return true iff at least one metric is qualitative
 	 */
@@ -82,7 +84,7 @@ public class DFT2MAConverter extends A2MAConverter<DFTState, DFT2MAStateSpaceGen
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -90,20 +92,5 @@ public class DFT2MAConverter extends A2MAConverter<DFTState, DFT2MAStateSpaceGen
 	protected DFT2MAStateSpaceGenerator createStateSpaceGenerator() {
 		return new DFT2MAStateSpaceGenerator();
 	}
-	
-	/**
-	 * Reduces the MarkovAutomaton based on compute quotient using Bisimilar states
-	 * @param root a fault tree node used as a root node for the conversion
-	 * return the dftconvertedautomaton is given as output
-	 */
-	public MarkovAutomaton<DFTState> reduceMA(FaultTreeNode root) {
-		
-		MarkovAutomaton<DFTState> dftmarkovautomaton = this.convert(root);
-		
-		Bisimulation<DFTState> bisimulation = new Bisimulation<>(dftmarkovautomaton);
-		bisimulation.computeQuotient();
-		
-		return dftmarkovautomaton;
-		
-	}
+
 }

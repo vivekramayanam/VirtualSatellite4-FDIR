@@ -116,8 +116,7 @@ public class DFT2MAConverterTest extends ATestCase {
 		final int EXPECTED_COUNT_STATES = 2;
 		final int EXPECTED_COUNT_TRANSITIONS = 2;
 //		final int EXPECTED_COUNT_FINAL_STATES = 1;
-//		final int actual = ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED).size();
-		
+
 		assertEquals(EXPECTED_COUNT_EVENTS, ma.getEvents().size());
 		Iterator<Object> itr = ma.getEvents().iterator();
 		IDFTEvent event1 = (IDFTEvent) itr.next();
@@ -126,7 +125,7 @@ public class DFT2MAConverterTest extends ATestCase {
 		assertTrue(event2.isImmediate());
 		assertEquals(EXPECTED_COUNT_STATES, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONS, ma.getTransitions().size());
-//		assertEquals(EXPECTED_COUNT_FINAL_STATES, actual);
+//		assertEquals(EXPECTED_COUNT_FINAL_STATES, ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED).size());
 	}
 
 	@Test

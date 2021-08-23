@@ -124,7 +124,6 @@ public class DFT2MAConverterTest extends ATestCase {
 		assertTrue(event2.isImmediate());
 		assertEquals(EXPECTED_COUNT_STATES, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONS, ma.getTransitions().size());
-//		assertEquals(EXPECTED_COUNT_FINAL_STATES, ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED).size());
 	}
 
 	@Test

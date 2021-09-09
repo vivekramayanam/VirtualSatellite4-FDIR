@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import de.dlr.sc.virsat.fdir.core.markov.MarkovAutomaton;
@@ -52,9 +54,10 @@ public class DFT2MAConverterTest extends ATestCase {
 		MarkovAutomaton<DFTState> ma = dft2MaConverter.convert(fault);
 		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 7;
 		final int EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION = 11;
-		
+			
 		assertEquals(EXPECTED_COUNT_STATES_AFTER_BISIMULATION, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION, ma.getTransitions().size());
+		
 	}
 
 	@Test
@@ -113,8 +116,10 @@ public class DFT2MAConverterTest extends ATestCase {
 		MarkovAutomaton<DFTState> ma = dft2MaConverter.convert(root);
 
 		final int EXPECTED_COUNT_EVENTS = 2;
-		final int EXPECTED_COUNT_STATES = 2;
+		final int EXPECTED_COUNT_STATES = 3;
 		final int EXPECTED_COUNT_TRANSITIONS = 2;
+		final int EXPECTED_COUNT_FINAL_STATES = 1;
+		final Set<DFTState> ACTUAL_FINAL_STATES = ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED);
 
 		assertEquals(EXPECTED_COUNT_EVENTS, ma.getEvents().size());
 		Iterator<Object> itr = ma.getEvents().iterator();
@@ -124,6 +129,7 @@ public class DFT2MAConverterTest extends ATestCase {
 		assertTrue(event2.isImmediate());
 		assertEquals(EXPECTED_COUNT_STATES, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONS, ma.getTransitions().size());
+		assertEquals(EXPECTED_COUNT_FINAL_STATES, ACTUAL_FINAL_STATES.size());
 	}
 
 	@Test
@@ -132,13 +138,14 @@ public class DFT2MAConverterTest extends ATestCase {
 
 		MarkovAutomaton<DFTState> ma = dft2MaConverter.convert(root);
 
-		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 3;
+		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 4;
 		final int EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION = 3;
-//		final int EXPECTED_COUNT_FINAL_STATES = 1;
+		final int EXPECTED_COUNT_FINAL_STATES = 1;
+		final Set<DFTState> ACTUAL_FINAL_STATES = ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED);
 
 		assertEquals(EXPECTED_COUNT_STATES_AFTER_BISIMULATION, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION, ma.getTransitions().size());
-//		assertEquals(EXPECTED_COUNT_FINAL_STATES, ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED).size());
+		assertEquals(EXPECTED_COUNT_FINAL_STATES, ACTUAL_FINAL_STATES.size());
 	}
 
 	@Test
@@ -162,13 +169,14 @@ public class DFT2MAConverterTest extends ATestCase {
 
 		MarkovAutomaton<DFTState> ma = dft2MaConverter.convert(root);
 
-		final int EXPECTED_COUNT_STATESAFTER_BISIMULATION = 4;
+		final int EXPECTED_COUNT_STATESAFTER_BISIMULATION = 5;
 		final int EXPECTED_COUNT_TRANSITIONSAFTER_BISIMULATION = 8;
-//		final int EXPECTED_COUNT_FINAL_STATES = 1;
+		final int EXPECTED_COUNT_FINAL_STATES = 1;
+		final Set<DFTState> ACTUAL_FINAL_STATES = ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED);
 
 		assertEquals(EXPECTED_COUNT_STATESAFTER_BISIMULATION, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONSAFTER_BISIMULATION, ma.getTransitions().size());
-//		assertEquals(EXPECTED_COUNT_FINAL_STATES, ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED).size());
+		assertEquals(EXPECTED_COUNT_FINAL_STATES, ACTUAL_FINAL_STATES.size());
 	}
 
 	@Test
@@ -177,13 +185,14 @@ public class DFT2MAConverterTest extends ATestCase {
 
 		MarkovAutomaton<DFTState> ma = dft2MaConverter.convert(root);
 
-		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 3;
+		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 4;
 		final int EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION = 3;
-//		final int EXPECTED_COUNT_FINAL_STATES = 1;
+		final int EXPECTED_COUNT_FINAL_STATES = 1;
+		final Set<DFTState> ACTUAL_FINAL_STATES = ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED);
 
 		assertEquals(EXPECTED_COUNT_STATES_AFTER_BISIMULATION, ma.getStates().size());
 		assertEquals(EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION, ma.getTransitions().size());
-//		assertEquals(EXPECTED_COUNT_FINAL_STATES, ma.getStatesWithLabels(FailLabelProvider.SINGLETON_FAILED).size());
+		assertEquals(EXPECTED_COUNT_FINAL_STATES, ACTUAL_FINAL_STATES.size());
 	}
 
 	@Test
@@ -204,7 +213,7 @@ public class DFT2MAConverterTest extends ATestCase {
 		}
 		assertEquals(EXPECTED_COUNT_STATES_AFTER_BISIMULATION, ACTUAL_COUNT_STATES_AFTER_BISIMULATION);
 		assertEquals(EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION, ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION);
-		assertTrue(allStatesLabels.size() == expectedAllStatesLabels.size());
+		assertEquals(expectedAllStatesLabels.size(), allStatesLabels.size());
 	}
 
 	@Test
@@ -214,7 +223,7 @@ public class DFT2MAConverterTest extends ATestCase {
 
 		List<DFTState> dftStates = dftreducedautomaton.getStates();
 		final int ACTUAL_COUNT_STATES_AFTER_BISIMULATION = dftStates.size();
-		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 3;
+		final int EXPECTED_COUNT_STATES_AFTER_BISIMULATION = 4;
 		final int ACTUAL_COUNT_TRANSITIONS_AFTER_BISIMULATION = dftreducedautomaton.getTransitions().size();
 		final int EXPECTED_COUNT_TRANSITIONS_AFTER_BISIMULATION = 3;
 

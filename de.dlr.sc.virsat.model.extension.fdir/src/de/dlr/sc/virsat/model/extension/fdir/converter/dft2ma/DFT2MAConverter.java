@@ -47,7 +47,7 @@ public class DFT2MAConverter extends A2MAConverter<DFTState, DFT2MAStateSpaceGen
 		stateSpaceGenerator.configure(ftHolder, failableBasicEventsProvider);
 		MarkovAutomaton<DFTState> ma = maBuilder.build(stateSpaceGenerator, monitor);
 		Bisimulation<DFTState> bisimulation = new Bisimulation<>(ma);
-		bisimulation.computeQuotient();
+    	bisimulation.computeQuotient();
 		return ma;
 	}
 

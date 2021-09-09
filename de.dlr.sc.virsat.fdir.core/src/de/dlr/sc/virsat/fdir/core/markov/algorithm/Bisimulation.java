@@ -134,7 +134,7 @@ public class Bisimulation<S extends MarkovState> {
 		if (stateRates.isEmpty() && blockRates.isEmpty()) {
 			isequal = blockLabels.equals(stateLabels);
 		}
-		isequal = blockLabels.equals(stateLabels) && stateRates.equals(blockRates);
+		isequal = blockLabels.equals(stateLabels) && stateRates.equals(blockRates) && state.getFailLabels().equals(block.iterator().next().getFailLabels());
 		return isequal;
 	}
 
@@ -242,7 +242,8 @@ public class Bisimulation<S extends MarkovState> {
 
 	/**
 	 * Gets the blocks that now have to be rechecked after the given refinement has
-	 * been applied 
+	 * been applied
+	 * 
 	 * @param refinedBlocks a refinement of the blocks
 	 * @return all outdated blocks that need to be rechecked for refinement
 	 */
@@ -258,10 +259,11 @@ public class Bisimulation<S extends MarkovState> {
 		}
 		return outdatedBlocks;
 	}
-	
+
 	/**
-	 * This method merges each equivalence class states into a 
-	 * single representative state 
+	 * This method merges each equivalence class states into a single representative
+	 * state
+	 * 
 	 * @param blocks the equivalence class blocks that are to be merged are given as
 	 *               input
 	 */
@@ -307,8 +309,11 @@ public class Bisimulation<S extends MarkovState> {
 			ma.removeInvalidTransitions(state);
 			ma.removeDuplicateTransitions(state);
 		}
+
+
 	}
 	
+
 	/**
 	 * compute the equivalence classes on the Markov automaton. Each equivalence
 	 * class is represented as a "block" list of states.

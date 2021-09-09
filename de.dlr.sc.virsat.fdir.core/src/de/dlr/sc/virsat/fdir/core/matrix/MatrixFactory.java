@@ -10,6 +10,7 @@
 
 package de.dlr.sc.virsat.fdir.core.matrix;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +32,14 @@ public class MatrixFactory implements IMatrixFactory {
 	public IMatrix createGeneratorMatrix(MarkovAutomaton<? extends MarkovState> ma, Set<? extends MarkovState> terminalStates, double delta) {		
 		SparseMatrix matrix = new SparseMatrix(ma.getStates().size());
 		
+		
+		List<Integer> actualIndexNumbers = new ArrayList<Integer>();
+		for (MarkovState state : ma.getStates()) {
+			actualIndexNumbers.add(state.getIndex());
+		}
 		for (MarkovState state : ma.getStates()) {
 			if (state.isMarkovian() && !terminalStates.contains(state)) {
-				int index = state.getIndex();
+				int index = actualIndexNumbers.indexOf(state.getIndex());
 				double exitRate = ma.getExitRateForState(state);
 				matrix.getDiagonal()[index] = -1 * exitRate * delta;
 			}
@@ -44,14 +50,14 @@ public class MatrixFactory implements IMatrixFactory {
 			MarkovState state = ma.getStates().get(i);
 			List<?> transitions = ma.getPredTransitions(state);
 			
-			matrix.getStatePredIndices()[state.getIndex()] = new int[transitions.size()];
-			matrix.getStatePredRates()[state.getIndex()] = new double[transitions.size()];
+			matrix.getStatePredIndices()[actualIndexNumbers.indexOf(state.getIndex())] = new int[transitions.size()];
+			matrix.getStatePredRates()[actualIndexNumbers.indexOf(state.getIndex())] = new double[transitions.size()];
 			for (int j = 0; j < transitions.size(); ++j) {
 				MarkovTransition<?> transition = (MarkovTransition<?>) transitions.get(j);
 				MarkovState fromState = (MarkovState) transition.getFrom();
 				if (fromState.isMarkovian() && !terminalStates.contains(fromState)) {
-					matrix.getStatePredIndices()[state.getIndex()][j] = fromState.getIndex();
-					matrix.getStatePredRates()[state.getIndex()][j] = transition.getRate() * delta;
+					matrix.getStatePredIndices()[actualIndexNumbers.indexOf(state.getIndex())][j] = fromState.getIndex();
+					matrix.getStatePredRates()[actualIndexNumbers.indexOf(state.getIndex())][j] = transition.getRate() * delta;
 				}
 			}
 		}		

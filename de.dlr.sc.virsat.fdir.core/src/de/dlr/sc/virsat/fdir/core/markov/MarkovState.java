@@ -34,6 +34,10 @@ public class MarkovState {
 		return index;
 	}
 	
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	
 	/**
 	 * Sets the type of this state
 	 * @param type the new type of this state

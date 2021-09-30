@@ -305,13 +305,15 @@ public class Bisimulation<S extends MarkovState> {
 			}
 			block.add(state);
 		}
-		for (Set<S> block : blocks) {
-			S state = block.iterator().next();
-			ma.removeInvalidTransitions(state);
-			ma.removeDuplicateTransitions(state);
-		}
+//		for (Set<S> block : blocks) {
+//			S state = block.iterator().next();
+//			ma.removeInvalidTransitions(state);
+//			ma.removeDuplicateTransitions(state);
+//		}
 		for (int i = 0; i < ma.getStates().size(); i++) {
 			S state = ma.getStates().get(i);
+			ma.removeInvalidTransitions(state);
+			ma.removeDuplicateTransitions(state);
 			state.setIndex(i);
 		}
 

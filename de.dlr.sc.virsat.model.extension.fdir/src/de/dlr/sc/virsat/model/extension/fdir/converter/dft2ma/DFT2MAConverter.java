@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.SubMonitor;
 
 import de.dlr.sc.virsat.fdir.core.markov.MarkovAutomaton;
 import de.dlr.sc.virsat.fdir.core.markov.algorithm.A2MAConverter;
-import de.dlr.sc.virsat.fdir.core.markov.algorithm.Bisimulation;
+//import de.dlr.sc.virsat.fdir.core.markov.algorithm.Bisimulation;
 import de.dlr.sc.virsat.fdir.core.metrics.IMetric;
 import de.dlr.sc.virsat.fdir.core.metrics.IQualitativeMetric;
 import de.dlr.sc.virsat.model.extension.fdir.converter.dft2ma.semantics.DFTSemantics;
@@ -46,8 +46,8 @@ public class DFT2MAConverter extends A2MAConverter<DFTState, DFT2MAStateSpaceGen
 		FaultTreeHolder ftHolder = new FaultTreeHolder(holderRoot);
 		stateSpaceGenerator.configure(ftHolder, failableBasicEventsProvider);
 		MarkovAutomaton<DFTState> ma = maBuilder.build(stateSpaceGenerator, monitor);
-		Bisimulation<DFTState> bisimulation = new Bisimulation<>(ma);
-		bisimulation.computeQuotient();
+		//Bisimulation<DFTState> bisimulation = new Bisimulation<>(ma);
+		//bisimulation.computeQuotient();
 		return ma;
 	}
 

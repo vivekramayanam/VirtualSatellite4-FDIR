@@ -38,8 +38,10 @@ public class MarkovState {
 	
 	public void setIndex(int index) {
 		this.index = index;
+		
 	}
 	
+
 	/**
 	 * Sets the index of the mttf values array that corresponds to this state due to the mismatch between state index and array index when the state space is reduced
 	 * @param valuesIndex the index of the mttf values array that corresponds to this state

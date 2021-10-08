@@ -296,6 +296,7 @@ public class Bisimulation<S extends MarkovState> {
 			}
 		}
 		Queue<Set<S>> blocksToProcess = new LinkedList<>(blocks);
+		
 		while (!blocksToProcess.isEmpty()) {
 			Set<S> block = blocksToProcess.poll();
 			S state = block.iterator().next();
@@ -304,6 +305,7 @@ public class Bisimulation<S extends MarkovState> {
 				ma.removeState(removedState);
 			}
 			block.add(state);
+			
 		}
 //		for (Set<S> block : blocks) {
 //			S state = block.iterator().next();
